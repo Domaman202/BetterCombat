@@ -27,17 +27,14 @@ public class BetterCombatMixinPlugin implements IMixinConfigPlugin {
         }
 
         boolean finalResult = result;
-        playerAnimatorPresent = () -> { return finalResult; };
+        playerAnimatorPresent = () -> finalResult;
 
         return result;
     };
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!playerAnimatorPresent.get()) {
-            return false;
-        }
-        return true;
+        return playerAnimatorPresent.get();
     }
 
     @Override

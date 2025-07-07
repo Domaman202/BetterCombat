@@ -37,14 +37,6 @@ public class PlayerAttackHelper {
                 && offAttributes != null && !offAttributes.isTwoHanded();
     }
 
-    public static boolean isTwoHandedWielding(PlayerEntity player) {
-        var mainAttributes = WeaponRegistry.getAttributes(player.getMainHandStack());
-        if (mainAttributes != null) {
-            return mainAttributes.isTwoHanded();
-        }
-        return false;
-    }
-
     public static float getAttackCooldownTicksCapped(PlayerEntity player) {
         // `getAttackCooldownProgressPerTick` should be called `getAttackCooldownLengthTicks`
         return Math.max(player.getAttackCooldownProgressPerTick(), BetterCombatMod.config.attack_interval_cap);
@@ -169,12 +161,6 @@ public class PlayerAttackHelper {
         return true;
     }
 
-    private static final Object attributesLock = new Object();
-
-    public static void swapHandAttributes(PlayerEntity player, Runnable runnable) {
-        swapHandAttributes(player, true, runnable);
-    }
-
     public static void swapHandAttributes(PlayerEntity player, boolean useOffHand, Runnable runnable) {
         if (!useOffHand) {
             runnable.run();
@@ -238,13 +224,6 @@ public class PlayerAttackHelper {
             offPose = "";
         }
         return new Pose(mainPose, offPose);
-    }
-
-
-
-    public static double getStaticRange(PlayerEntity player, ItemStack stack) {
-        var attributes = WeaponRegistry.getAttributes(stack);
-        return combineAttackRange(attributes, player.getAttributeBaseValue(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE));
     }
 
     public static double getRangeForItem(PlayerEntity player, ItemStack stack) {

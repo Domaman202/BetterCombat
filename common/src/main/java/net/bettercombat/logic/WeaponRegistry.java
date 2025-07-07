@@ -196,31 +196,6 @@ public class WeaponRegistry {
                 + " bytes (in " + chunks.size() + " string chunks with the size of "  + CHUNK_SIZE + ")");
     }
 
-    public static void decodeRegistry(Packets.WeaponRegistrySync syncPacket) {
-        var compressed = syncPacket.compressed();
-        String json = "";
-        for (var chunk : syncPacket.chunks()) {
-            json = json.concat(chunk);
-        }
-        if (compressed) {
-            json = CompressionHelper.gzipDecompress(json);
-        }
-        LOGGER.info("Decoded Weapon Attribute registry in " + syncPacket.chunks().size() + " string chunks");
-        if (BetterCombatMod.config.weapon_registry_logging) {
-            LOGGER.info("Weapon Attribute registry received: " + json);
-        }
-
-        SyncFormat sync = gson.fromJson(json, SyncFormat.class);
-        containers.clear();
-        sync.attributes.forEach((key, value) -> {
-            containers.put(Identifier.of(key), value);
-        });
-        registrations.clear();
-        sync.registrations.forEach((key, value) -> {
-            registrations.put(Identifier.of(key), value);
-        });
-    }
-
     public static Encoded getEncodedRegistry() {
         return encodedRegistrations;
     }

@@ -22,23 +22,6 @@ public class Packets {
         public static final CustomPayload.Id<C2S_AttackRequest> PACKET_ID = new CustomPayload.Id<>(ID);
         public static final PacketCodec<RegistryByteBuf, C2S_AttackRequest> CODEC = PacketCodec.of(C2S_AttackRequest::write, C2S_AttackRequest::read);
 
-        public C2S_AttackRequest(int comboCount, boolean isSneaking, int selectedSlot, @Nullable Entity cursorTarget, List<Entity> entities) {
-            this(comboCount, isSneaking, selectedSlot, convertEntity(cursorTarget), convertEntityList(entities));
-        }
-
-        private static int[] convertEntityList(List<Entity> entities) {
-            int[] ids = new int[entities.size()];
-            for(int i = 0; i < entities.size(); i++) {
-                var entity = entities.get(i);
-                ids[i] = entity.getId();
-            }
-            return ids;
-        }
-        private static int convertEntity(@Nullable Entity entity) {
-            if (entity == null) { return -1; }
-            return entity.getId();
-        }
-
         public static boolean UseVanillaPacket = true;
         public void write(PacketByteBuf buffer) {
             buffer.writeInt(comboCount);

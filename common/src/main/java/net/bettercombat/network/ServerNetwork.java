@@ -38,11 +38,6 @@ public class ServerNetwork {
     static final Logger LOGGER = LogUtils.getLogger();
 
     public static void handleAttackAnimation(Packets.AttackAnimation packet, MinecraftServer server, ServerPlayerEntity player) {
-        ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld())
-                .orNull();
-        if (world == null || world.isClient) {
-            return;
-        }
         final var forwardPacket = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing());
         try {
             //send info back for Replaymod Compat
@@ -66,11 +61,7 @@ public class ServerNetwork {
     public static Identifier TEMPORARY_ATTACK = Identifier.of(BetterCombatMod.ID, "temp_attack");
 
     public static void handleAttackRequest(Packets.C2S_AttackRequest request, MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler) {
-        ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld())
-                .orNull();
-        if (world == null || world.isClient) {
-            return;
-        }
+        ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.getWorld()).orNull();
         final var hand = PlayerAttackHelper.getCurrentAttack(player, request.comboCount());
         if (hand == null) {
             LOGGER.error("Server handling Packets.C2S_AttackRequest - No current attack hand!");

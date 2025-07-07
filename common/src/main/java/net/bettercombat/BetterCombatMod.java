@@ -4,8 +4,6 @@ import com.mojang.logging.LogUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
-import net.bettercombat.api.client.AttackRangeExtensions;
-import net.bettercombat.compat.CompatFeatures;
 import net.bettercombat.config.FallbackConfig;
 import net.bettercombat.config.ServerConfig;
 import net.bettercombat.config.ServerConfigWrapper;
@@ -32,12 +30,6 @@ public class BetterCombatMod {
         // Intuitive way to load a config :)
         config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
         loadFallbackConfig();
-
-        AttackRangeExtensions.register( context -> {
-            return new AttackRangeExtensions.Modifier(context.player().getScale(), AttackRangeExtensions.Operation.MULTIPLY);
-        });
-
-        CompatFeatures.init();
     }
 
     public static ServerConfig getConfig() {

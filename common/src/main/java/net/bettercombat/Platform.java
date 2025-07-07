@@ -1,7 +1,6 @@
 package net.bettercombat;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,14 +30,6 @@ public class Platform {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    public static boolean isModLoaded(String modid) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static boolean isCastingSpell(PlayerEntity player) { throw new AssertionError(); }
-
     // MARK: Network hooks
 
     @ExpectPlatform
@@ -63,11 +54,6 @@ public class Platform {
 
     @ExpectPlatform
     public static void networkS2C_Send(ServerPlayerEntity player, CustomPayload payload) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static void networkC2S_Send(CustomPayload payload) {
         throw new AssertionError();
     }
 }

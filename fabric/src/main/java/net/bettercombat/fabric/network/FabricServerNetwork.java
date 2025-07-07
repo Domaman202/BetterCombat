@@ -9,7 +9,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerConfigurationTask;
 import net.minecraft.text.Text;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class FabricServerNetwork {

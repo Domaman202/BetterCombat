@@ -4,8 +4,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.api.AttackHand;
-import net.bettercombat.api.EntityPlayer_BetterCombat;
-import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
 import net.bettercombat.logic.WeaponRegistry;
@@ -21,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -30,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
+public abstract class PlayerEntityMixin implements PlayerAttackProperties {
     private int comboCount = 0;
     public int getComboCount() {
         return comboCount;
@@ -53,22 +50,10 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         var instance = (Object)this;
         var player = ((PlayerEntity)instance);
 
-        if (player.getWorld().isClient()) {
-            ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
-        } else {
-            var pose = PlayerAttackHelper.poseForPlayer(player);
-            player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, pose.base());
-            player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, pose.offHand());
-        }
+        var pose = PlayerAttackHelper.poseForPlayer(player);
+        player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, pose.base());
+        player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, pose.offHand());
         updateDualWieldingSpeedBoost();
-    }
-
-    public String getMainHandIdleAnimation() {
-        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_MAIN_IDLE_ANIMATION);
-    }
-
-    public String getOffHandIdleAnimation() {
-        return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_OFF_IDLE_ANIMATION);
     }
 
     // FEATURE: Disable sweeping for attributed weapons
@@ -211,16 +196,5 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         }
         var redirectedHand = hand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
         instance.setStackInHand(redirectedHand, itemStack);
-    }
-
-    // SECTION: BetterCombatPlayer
-
-    @Nullable
-    public AttackHand getCurrentAttack() {
-        if (comboCount < 0) {
-            return null;
-        }
-        var player = ((PlayerEntity) ((Object)this));
-        return PlayerAttackHelper.getCurrentAttack(player, comboCount);
     }
 }

@@ -12,8 +12,4 @@ public enum AnimatedHand {
         }
         return MAIN_HAND;
     }
-
-    public boolean isOffHand() {
-        return this == OFF_HAND;
-    }
 }

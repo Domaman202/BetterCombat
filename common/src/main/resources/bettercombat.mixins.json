@@ -15,19 +15,6 @@
     "player.PlayerEntityMixin",
     "player.PlayerEntityRangeMixin"
   ],
-  "client": [
-    "client.AbstractClientPlayerEntityMixin",
-    "client.ClientPlayerEntityMixin",
-    "client.ClientPlayerInteractionManagerMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.ColliderDebugRenderer",
-    "client.InGameHudInject",
-    "client.ItemStackTooltipMixin",
-    "client.MinecraftClientAccessor",
-    "client.MinecraftClientInject"
-  ],
-  "server": [
-  ],
   "plugin": "net.bettercombat.mixin.BetterCombatMixinPlugin",
   "injectors": {
     "defaultRequire": 1

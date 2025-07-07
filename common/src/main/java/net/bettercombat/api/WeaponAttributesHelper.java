@@ -3,17 +3,8 @@ package net.bettercombat.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import net.bettercombat.logic.ItemStackNBTWeaponAttributes;
-import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.io.InvalidObjectException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -87,20 +78,9 @@ public class WeaponAttributesHelper {
 
     private static Type attributesContainerFileFormat = new TypeToken<AttributesContainer>() {}.getType();
 
-    public static AttributesContainer decode(Reader reader) {
-        var gson = new Gson();
-        AttributesContainer container = gson.fromJson(reader, attributesContainerFileFormat);
-        return container;
-    }
-
     public static AttributesContainer decode(JsonReader json) {
         var gson = new Gson();
         AttributesContainer container = gson.fromJson(json, attributesContainerFileFormat);
         return container;
-    }
-
-    public static String encode(AttributesContainer container) {
-        var gson = new Gson();
-        return gson.toJson(container);
     }
 }
