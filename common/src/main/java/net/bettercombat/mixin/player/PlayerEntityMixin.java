@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
+@Debug(export = true)
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerAttackProperties {
     private int comboCount = 0;
@@ -60,6 +62,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties {
 
     @ModifyVariable(method = "attack", at = @At("STORE"), ordinal = 3)
     private boolean disableSweeping(boolean value) {
+        System.out.println("PISKA START");
         if (BetterCombatMod.config.allow_vanilla_sweeping) {
             return value;
         }
@@ -70,6 +73,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties {
             // Disable sweeping
             return false;
         }
+        System.out.println("PISKA END");
         return value;
     }
 
