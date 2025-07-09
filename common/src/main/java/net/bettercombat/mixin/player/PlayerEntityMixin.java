@@ -88,33 +88,6 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         return value;
     }
 
-    // FEATURE: Two-handed wielding
-
-    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-        var mainHandHasTwoHanded = false;
-        var mainHandStack = ((PlayerEntityAccessor) this).getInventory().getMainHandStack();
-        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
-            mainHandHasTwoHanded = true;
-        }
-
-        var offHandHasTwoHanded = false;
-        var offHandStack = ((PlayerEntityAccessor)this).getInventory().offHand.get(0);
-        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
-            offHandHasTwoHanded = true;
-        }
-
-        if (slot == OFFHAND) {
-            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-                cir.setReturnValue(ItemStack.EMPTY);
-                cir.cancel();
-                return;
-            }
-        }
-    }
-
     // FEATURE: Dual wielding
 
     private Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> dualWieldingAttributeMap;

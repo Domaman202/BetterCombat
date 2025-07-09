@@ -37,7 +37,7 @@ public class RangedWeaponItemMixin {
     ) {
         var originalResult = original.call(entity, hand); // Always call original first to allow others' side effects
         if (entity instanceof PlayerEntity player) {
-            return player.getInventory().offHand.get(0);
+            return player.getOffHandStack();
         } else {
             return originalResult;
         }

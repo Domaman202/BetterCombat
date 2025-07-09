@@ -38,8 +38,8 @@ public class ClientPlayerEntityMixin {
 //                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
 //                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);
             }
-            clientPlayer.input.movementForward *= multiplier;
-            clientPlayer.input.movementSideways *= multiplier;
+//            clientPlayer.input.movementForward *= multiplier;
+//            clientPlayer.input.movementSideways *= multiplier; // todo:
         }
     }
 }

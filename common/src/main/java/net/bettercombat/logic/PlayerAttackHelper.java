@@ -5,6 +5,7 @@ import net.bettercombat.api.AttackHand;
 import net.bettercombat.api.ComboState;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.utils.AttributeModifierHelper;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -183,16 +184,16 @@ public class PlayerAttackHelper {
         synchronized (player) {
             var inventory = player.getInventory();
             var mainHandStack = player.getMainHandStack();
-            var offHandStack = inventory.offHand.get(0);
+            var offHandStack = player.getOffHandStack();
 
             setAttributesForOffHandAttack(player, true);
-            inventory.main.set(inventory.selectedSlot, offHandStack);
-            inventory.offHand.set(0, offHandStack);
+            inventory.setStack(inventory.getSelectedSlot(), offHandStack);
+            player.equipStack(EquipmentSlot.OFFHAND, offHandStack);
 
             runnable.run();
 
-            inventory.main.set(inventory.selectedSlot, mainHandStack);
-            inventory.offHand.set(0, offHandStack);
+            inventory.setStack(inventory.getSelectedSlot(), mainHandStack);
+            player.equipStack(EquipmentSlot.OFFHAND, offHandStack);
             setAttributesForOffHandAttack(player, false);
         }
     }

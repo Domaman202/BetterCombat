@@ -51,8 +51,8 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private final PoseSubStack offHandBodyPose = new PoseSubStack(null, true, false);
     private final PoseSubStack offHandItemPose = new PoseSubStack(null, false, true);
 
-    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public AbstractClientPlayerEntityMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
@@ -94,7 +94,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         // Restore auto body rotation upon swing - Fix issue #11
 
         if (hasActiveAttackAnimation) {
-            ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0);
+//            ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0); // todo:
         }
 
         // Pose

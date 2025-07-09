@@ -1,6 +1,5 @@
 package net.bettercombat.mixin.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.client.BetterCombatClientMod;
@@ -9,7 +8,6 @@ import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderLoader.LoadException;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.debug.DebugRenderer;
@@ -80,36 +78,36 @@ public class ColliderDebugRenderer {
     }
 
     private void drawOutline(MatrixStack matrixStack, OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) throws LoadException {
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShader(MinecraftClient.getInstance().getShaderLoader().getProgramToLoad(ShaderProgramKeys.POSITION_COLOR));
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
-        RenderSystem.disableBlend();
-        RenderSystem.lineWidth(1.0f);
-
-        if (collides) {
-            //System.out.println("Drawing collider +");
-            outlineOBB(matrixStack, obb, bufferBuilder,
-                    1, 0, 0,
-                    1, 0, 0,0.5F);
-        } else {
-            //System.out.println("Drawing collider -");
-            outlineOBB(matrixStack, obb, bufferBuilder,
-                    0, 1, 0,
-                    1, 1, 0,0.5F);
-        }
-        look(matrixStack, obb, bufferBuilder, 0.5F);
-
-        for(OrientedBoundingBox otherObb: otherObbs){
-            outlineOBB(matrixStack, otherObb, bufferBuilder,
-                    1, 0, 0,
-                    1, 0, 0,0.5F);
-        }
-
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-
-        RenderSystem.lineWidth(1.0f);
-        RenderSystem.enableBlend();
+//        RenderSystem.enableDepthTest();
+//        RenderSystem.setShader(MinecraftClient.getInstance().getShaderLoader().getProgramToLoad(ShaderProgramKeys.POSITION_COLOR));
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+//        RenderSystem.disableBlend();
+//        RenderSystem.lineWidth(1.0f);
+//
+//        if (collides) {
+//            //System.out.println("Drawing collider +");
+//            outlineOBB(matrixStack, obb, bufferBuilder,
+//                    1, 0, 0,
+//                    1, 0, 0,0.5F);
+//        } else {
+//            //System.out.println("Drawing collider -");
+//            outlineOBB(matrixStack, obb, bufferBuilder,
+//                    0, 1, 0,
+//                    1, 1, 0,0.5F);
+//        }
+//        look(matrixStack, obb, bufferBuilder, 0.5F);
+//
+//        for(OrientedBoundingBox otherObb: otherObbs){
+//            outlineOBB(matrixStack, otherObb, bufferBuilder,
+//                    1, 0, 0,
+//                    1, 0, 0,0.5F);
+//        }
+//
+//        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+//
+//        RenderSystem.lineWidth(1.0f);
+//        RenderSystem.enableBlend(); // todo:
     }
 
     private void outlineOBB(MatrixStack matrixStack, OrientedBoundingBox box, BufferBuilder buffer,

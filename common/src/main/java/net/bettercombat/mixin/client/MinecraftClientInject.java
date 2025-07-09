@@ -66,10 +66,10 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     private boolean isHarvesting = false;
 
     // Targeting the method where all the disconnection related logic is.
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
-    private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
-        BetterCombatClientMod.ENABLED = false;
-    }
+//    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
+//    private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
+//        BetterCombatClientMod.ENABLED = false;
+//    } // todo:
 
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
@@ -362,7 +362,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         // Mimic logic of:
         // ClientPlayerInteractionManager.attackEntity(PlayerEntity player, Entity target)
-        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().selectedSlot, targets);
+        var packet = new Packets.C2S_AttackRequest(getComboCount(), player.isSneaking(), player.getInventory().getSelectedSlot(), cursorTarget, targets);
         Platform.networkC2S_Send(packet);
         for (var target: targets) {
             player.attack(target);
