@@ -24,7 +24,6 @@ import net.bettercombat.client.animation.modifier.TransmissionSpeedModifier;
 import net.bettercombat.client.compat.FirstPersonAnimationCompatibility;
 import net.bettercombat.logic.AnimatedHand;
 import net.bettercombat.logic.PlayerAttackHelper;
-import net.bettercombat.mixin.player.LivingEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -32,7 +31,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -94,7 +92,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         // Restore auto body rotation upon swing - Fix issue #11
 
         if (hasActiveAttackAnimation) {
-//            ((LivingEntityAccessor)player).invokeTurnHead(player.getHeadYaw(), 0); // todo:
+            this.turnHead(player.getYaw());
         }
 
         // Pose
@@ -246,25 +244,12 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private void updateAnimationByCurrentActivity(KeyframeAnimation.AnimationBuilder animation) {
         var pose = getPose();
         switch (pose) {
-            case STANDING -> {
-            }
-            case GLIDING -> {
-            }
-            case SLEEPING -> {
-            }
+            case STANDING, SLEEPING, GLIDING, SPIN_ATTACK, CROUCHING, LONG_JUMPING, DYING -> {}
             case SWIMMING -> {
                 StateCollectionHelper.configure(animation.rightLeg, false, false);
                 StateCollectionHelper.configure(animation.leftLeg, false, false);
             }
-            case SPIN_ATTACK -> {
-            }
-            case CROUCHING -> {
-            }
-            case LONG_JUMPING -> {
-            }
-            case DYING -> {
-            }
-			default -> {}
+            default -> {}
         }
         if (isMounting()) {
             StateCollectionHelper.configure(animation.rightLeg, false, false);

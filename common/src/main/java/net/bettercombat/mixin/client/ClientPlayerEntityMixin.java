@@ -5,13 +5,21 @@ import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.bettercombat.utils.MathHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin {
+public abstract class ClientPlayerEntityMixin extends LivingEntity {
+    protected ClientPlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
+    }
+
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Input;tick()V", shift = At.Shift.AFTER))
     private void tickMovement_ModifyInput(CallbackInfo ci) {
         var config = BetterCombatMod.config;
@@ -38,8 +46,8 @@ public class ClientPlayerEntityMixin {
 //                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
 //                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);
             }
-//            clientPlayer.input.movementForward *= multiplier;
-//            clientPlayer.input.movementSideways *= multiplier; // todo:
+            clientPlayer.forwardSpeed *= (float) multiplier;
+            clientPlayer.sidewaysSpeed *= (float) multiplier;
         }
     }
 }
