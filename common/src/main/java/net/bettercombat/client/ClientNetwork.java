@@ -19,7 +19,6 @@ public class ClientNetwork {
     public static void handleConfigSync(Packets.ConfigSync packet) {
         BetterCombatMod.LOGGER.info("Received config sync packet");
         BetterCombatMod.config = packet.deserialized();
-        BetterCombatClientMod.ENABLED = true;
     }
 
     public static void handleAttackAnimation(Packets.AttackAnimation packet) {

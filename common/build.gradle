@@ -48,4 +48,6 @@ dependencies {
 
     modCompileOnly("dev.ftb.mods:ftb-teams:${project.ftb_teams_version}")
     modCompileOnly("dev.ftb.mods:ftb-library:${project.ftb_library_version}")
+
+    implementation("org.yaml:snakeyaml:2.4")
 }

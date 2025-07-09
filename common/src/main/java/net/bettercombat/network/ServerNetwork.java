@@ -46,17 +46,13 @@ public class ServerNetwork {
         final var forwardPacket = new Packets.AttackAnimation(player.getId(), packet.animatedHand(), packet.animationName(), packet.length(), packet.upswing());
         try {
             //send info back for Replaymod Compat
-            if (Platform.networkS2C_CanSend(player, Packets.AttackAnimation.ID)) {
-                Platform.networkS2C_Send(player, forwardPacket);
-            }
+            Platform.networkS2C_Send(player, forwardPacket);
         } catch (Exception e){
             e.printStackTrace();
         }
         Platform.tracking(player).forEach(serverPlayer -> {
             try {
-                if (Platform.networkS2C_CanSend(serverPlayer, Packets.AttackAnimation.ID)) {
-                    Platform.networkS2C_Send(serverPlayer, forwardPacket);
-                }
+                Platform.networkS2C_Send(serverPlayer, forwardPacket);
             } catch (Exception e){
                 e.printStackTrace();
             }

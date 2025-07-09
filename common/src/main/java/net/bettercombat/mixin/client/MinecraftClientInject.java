@@ -65,17 +65,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     private boolean isHoldingAttackInput = false;
     private boolean isHarvesting = false;
 
-    // Targeting the method where all the disconnection related logic is.
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V",at = @At("TAIL"))
-    private void disconnect_TAIL(Screen screen, CallbackInfo ci) {
-        BetterCombatClientMod.ENABLED = false;
-    }
-
     // Press to attack
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)
     private void pre_doAttack(CallbackInfoReturnable<Boolean> info) {
-        if (!BetterCombatClientMod.ENABLED) { return; }
-
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
@@ -92,8 +84,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     // Hold to attack
     @Inject(method = "handleBlockBreaking", at = @At("HEAD"), cancellable = true)
     private void pre_handleBlockBreaking(boolean bl, CallbackInfo ci) {
-        if (!BetterCombatClientMod.ENABLED) { return; }
-
         MinecraftClient client = thisClient();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
@@ -120,8 +110,6 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     private void pre_doItemUse(CallbackInfo ci) {
-        if (!BetterCombatClientMod.ENABLED) { return; }
-
         var hand = getCurrentHand();
         if (hand == null) { return; }
         double upswingRate = hand.upswingRate();

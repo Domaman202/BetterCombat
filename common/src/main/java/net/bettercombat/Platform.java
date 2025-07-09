@@ -57,11 +57,6 @@ public class Platform {
     }
 
     @ExpectPlatform
-    public static boolean networkS2C_CanSend(ServerPlayerEntity player, Identifier packetId) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static void networkS2C_Send(ServerPlayerEntity player, CustomPayload payload) {
         throw new AssertionError();
     }

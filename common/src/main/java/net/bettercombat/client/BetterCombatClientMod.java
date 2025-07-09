@@ -9,7 +9,6 @@ import net.bettercombat.config.ClientConfigWrapper;
 import net.minecraft.client.MinecraftClient;
 
 public class BetterCombatClientMod {
-    public static boolean ENABLED = false;
     public static ClientConfig config;
 
     public static void init() {

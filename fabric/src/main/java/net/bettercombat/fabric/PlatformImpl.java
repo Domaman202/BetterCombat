@@ -7,11 +7,13 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
@@ -44,15 +46,12 @@ public class PlatformImpl {
         return PlayerLookup.around(world, origin, distance);
     }
 
-    public static boolean networkS2C_CanSend(ServerPlayerEntity player, Identifier packetId) {
-        return ServerPlayNetworking.canSend(player, packetId);
-    }
-
     public static void networkS2C_Send(ServerPlayerEntity player, CustomPayload payload) {
         ServerPlayNetworking.send(player, payload);
     }
 
     public static void networkC2S_Send(CustomPayload payload) {
+        MinecraftClient.getInstance().player.sendMessage(Text.of("Packet send: " + payload));
         ClientPlayNetworking.send(payload);
     }
 }

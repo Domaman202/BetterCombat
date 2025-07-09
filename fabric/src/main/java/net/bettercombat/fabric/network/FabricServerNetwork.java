@@ -7,9 +7,7 @@ import net.bettercombat.network.ServerNetwork;
 import net.fabricmc.fabric.api.networking.v1.*;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.network.ServerPlayerConfigurationTask;
-import net.minecraft.text.Text;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class FabricServerNetwork {
@@ -20,31 +18,22 @@ public class FabricServerNetwork {
         PayloadTypeRegistry.configurationC2S().register(Packets.Ack.PACKET_ID, Packets.Ack.CODEC);
 
         ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
-            // This if block is required! Otherwise the client gets stuck in connection screen
-            // if the client cannot handle the packet.
-            if (ServerConfigurationNetworking.canSend(handler, Packets.ConfigSync.ID)) {
-                // System.out.println("Starting ConfigurationTask");
-                var configJson = Packets.ConfigSync.serialize(BetterCombatMod.getConfig());
-                handler.addTask(new ConfigurationTask(configJson));
-            } else {
-                handler.disconnect(Text.literal("Network configuration task not supported: " + ConfigurationTask.name));
-            }
+            System.out.println("Starting ConfigurationTask");
+            var configJson = Packets.ConfigSync.serialize(BetterCombatMod.getConfig());
+            handler.addTask(new ConfigurationTask(configJson));
         });
 
         ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
-            if (ServerConfigurationNetworking.canSend(handler, Packets.WeaponRegistrySync.ID)) {
-                if (WeaponRegistry.getEncodedRegistry().chunks().isEmpty()) {
-                    throw new AssertionError("Weapon registry is empty!");
-                }
-                // System.out.println("Starting WeaponRegistrySyncTask, chunks: " + WeaponRegistry.getEncodedRegistry().chunks().size());
-                handler.addTask(new WeaponRegistrySyncTask(WeaponRegistry.getEncodedRegistry()));
-            } else {
-                handler.disconnect(Text.literal("Network configuration task not supported: " + WeaponRegistrySyncTask.name));
+            if (WeaponRegistry.getEncodedRegistry().chunks().isEmpty()) {
+                throw new AssertionError("Weapon registry is empty!");
             }
+            System.out.println("Starting WeaponRegistrySyncTask, chunks: " + WeaponRegistry.getEncodedRegistry().chunks().size());
+            handler.addTask(new WeaponRegistrySyncTask(WeaponRegistry.getEncodedRegistry()));
         });
 
         ServerConfigurationNetworking.registerGlobalReceiver(Packets.Ack.PACKET_ID, (packet, context) -> {
             // Warning: if you do not call completeTask, the client gets stuck!
+            System.out.println("Received Ack Packet " + packet.code());
             if (packet.code().equals(ConfigurationTask.name)) {
                 context.networkHandler().completeTask(ConfigurationTask.KEY);
             }
