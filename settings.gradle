@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'bettercombat'
+rootProject.name = 'bettercombat-cws'
 
 include 'common'
 include 'fabric'
