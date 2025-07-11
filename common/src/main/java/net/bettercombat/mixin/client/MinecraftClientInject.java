@@ -364,7 +364,9 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
         var attackedCount = (int) targets.stream().filter(it -> it.isAttackable() && it instanceof LivingEntity living && living.getHealth() > 0).count();
         if (attackedCount == 0) {
-            ((PlayerAttackProperties) player).resetHitsCount();
+            if (BetterCombatMod.config.reset_hits_after_miss) {
+                ((PlayerAttackProperties) player).resetHitsCount();
+            }
         } else {
             ((PlayerAttackProperties) player).updateHitsCount(attackedCount, System.currentTimeMillis());
             if (BetterCombatClientMod.config.hitInfoInChat) {
