@@ -24,36 +24,36 @@ import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin implements ConfigurableKnockback {
-    @Shadow
-    @Final
-    protected EntityEquipment equipment;
+//    @Shadow
+//    @Final
+//    protected EntityEquipment equipment;
 
     // FEATURE: Two-handed wielding
 
-    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-        var mainHandHasTwoHanded = false;
-        var mainHandStack = this.equipment.get(MAINHAND);
-        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
-            mainHandHasTwoHanded = true;
-        }
-
-        var offHandHasTwoHanded = false;
-        var offHandStack = this.equipment.get(OFFHAND);
-        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
-            offHandHasTwoHanded = true;
-        }
-
-        if (slot == OFFHAND) {
-            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-                cir.setReturnValue(ItemStack.EMPTY);
-                cir.cancel();
-                return;
-            }
-        }
-    }
+//    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
+//    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
+//        var mainHandHasTwoHanded = false;
+//        var mainHandStack = this.equipment.get(MAINHAND);
+//        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
+//        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
+//            mainHandHasTwoHanded = true;
+//        }
+//
+//        var offHandHasTwoHanded = false;
+//        var offHandStack = this.equipment.get(OFFHAND);
+//        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
+//        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
+//            offHandHasTwoHanded = true;
+//        }
+//
+//        if (slot == OFFHAND) {
+//            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
+//                cir.setReturnValue(ItemStack.EMPTY);
+//                cir.cancel();
+//                return;
+//            }
+//        }
+//    }
 
     // FEATURE: Dual wielded attacking - Client side weapon cooldown for offhand
 
