@@ -7,6 +7,7 @@
   "hud.bettercombat.mine_with_weapons_off" : "Mine with weapons: No",
 
   "text.autoconfig.bettercombat.title" : "Better Combat",
+  "text.autoconfig.bettercombat.option.client.hitInfoInChat.@Tooltip": "Print hits count to chat",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled" : "Hold to attack",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip" : "Automatically attack while holding the attack button",
   "text.autoconfig.bettercombat.option.client.isAttackInsteadOfMineWhenEnemiesCloseEnabled" : "Attack instead of mining",

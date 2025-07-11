@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 
 @Config(name = "server")
 public class ServerConfig implements ConfigData {
+    @Comment("Time in milliseconds without a player hitting after which the hit counter is reset.")
+    public long hits_reset_time = 5000;
     @Comment("""
             Upswing (aka windup) is the first phase of the attack (between clicking and performing the damage).
             Typical duration of upswing is `weapon cooldown * 0.5`. (Weapon specific upswing values can be defined in weapon attributes)

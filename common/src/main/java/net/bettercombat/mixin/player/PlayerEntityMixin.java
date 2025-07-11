@@ -8,8 +8,6 @@ import net.bettercombat.api.EntityPlayer_BetterCombat;
 import net.bettercombat.client.animation.PlayerAttackAnimatable;
 import net.bettercombat.logic.PlayerAttackHelper;
 import net.bettercombat.logic.PlayerAttackProperties;
-import net.bettercombat.logic.WeaponRegistry;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -25,18 +23,38 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
     private int comboCount = 0;
+
     public int getComboCount() {
         return comboCount;
     }
+
     public void setComboCount(int comboCount) {
         this.comboCount = comboCount;
+    }
+
+    private int hitsCount = 0;
+    private long lastHitTime = 0;
+
+    @Override
+    public int getHitsCount() {
+        return hitsCount;
+    }
+
+    @Override
+    public void updateHitsCount(int hitsCount, long lastHitTime) {
+        if (lastHitTime - this.lastHitTime > BetterCombatMod.config.hits_reset_time)
+            this.hitsCount = hitsCount;
+        else this.hitsCount += hitsCount;
+        this.lastHitTime = lastHitTime;
+    }
+
+    @Override
+    public void resetHitsCount() {
+        this.hitsCount = 0;
     }
 
     private static final TrackedData<String> BETTER_COMBAT_MAIN_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);

@@ -25,8 +25,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -349,7 +351,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 attack,
                 range);
         updateTargetsInReach(targets);
-        if(targets.size() == 0) {
+        if (targets.isEmpty()) {
             PlatformClient.onEmptyLeftClick(player);
 
             if (crosshairTarget.getType() == BLOCK) {
@@ -357,6 +359,16 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
                 var pos = blockHitResult.getBlockPos();
                 var packet = new Packets.C2S_BlockHit(pos);
                 Platform.networkC2S_Send(packet);
+            }
+        }
+
+        var attackedCount = (int) targets.stream().filter(it -> it.isAttackable() && it instanceof LivingEntity living && living.getHealth() > 0).count();
+        if (attackedCount == 0) {
+            ((PlayerAttackProperties) player).resetHitsCount();
+        } else {
+            ((PlayerAttackProperties) player).updateHitsCount(attackedCount, System.currentTimeMillis());
+            if (BetterCombatClientMod.config.hitInfoInChat) {
+                player.sendMessage(Text.of("§6Нанесено ударов: §4§o" + ((PlayerAttackProperties) player).getHitsCount()), false);
             }
         }
 
