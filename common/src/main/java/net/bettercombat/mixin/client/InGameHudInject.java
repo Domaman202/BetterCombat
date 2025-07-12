@@ -21,7 +21,7 @@ public abstract class InGameHudInject {
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIII)V"))
     private void renderCrosshair_WrapOperation(DrawContext instance, RenderPipeline pipeline, Identifier sprite, int x, int y, int width, int height, Operation<Void> original) {
         if (BetterCombatClientMod.config.isHighlightCrosshairEnabled
-            && ((MinecraftClient_BetterCombat) MinecraftClient.getInstance()).hasTargetsInReach()) {
+            && ((MinecraftClient_BetterCombat) MinecraftClient.getInstance()).hasTargetsInReach$BetterCombat()) {
             float alpha = 0.5F;
 
             var color = BetterCombatClientMod.config.hudHighlightColor;
@@ -40,7 +40,7 @@ public abstract class InGameHudInject {
     @WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/util/Identifier;IIIIIIII)V"))
     private void renderCrosshair_WrapOperation(DrawContext instance, RenderPipeline pipeline, Identifier sprite, int textureWidth, int textureHeight, int u, int v, int x, int y, int width, int height, Operation<Void> original) {
         if (BetterCombatClientMod.config.isHighlightCrosshairEnabled
-                && ((MinecraftClient_BetterCombat) MinecraftClient.getInstance()).hasTargetsInReach()) {
+                && ((MinecraftClient_BetterCombat) MinecraftClient.getInstance()).hasTargetsInReach$BetterCombat()) {
             float alpha = 0.5F;
 
             var color = BetterCombatClientMod.config.hudHighlightColor;

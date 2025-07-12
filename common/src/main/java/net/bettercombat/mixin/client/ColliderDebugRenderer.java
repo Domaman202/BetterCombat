@@ -47,7 +47,7 @@ public class ColliderDebugRenderer {
             return;
         }
         var extendedClient = (MinecraftClient_BetterCombat)client;
-        var comboCount = extendedClient.getComboCount();
+        var comboCount = extendedClient.getComboCount$BetterCombat();
         var hand = PlayerAttackHelper.getCurrentAttack(client.player, comboCount);
         if (hand == null) {
             return;
@@ -56,7 +56,7 @@ public class ColliderDebugRenderer {
         if (attributes == null) {
             return;
         }
-        var cursorTarget = extendedClient.getCursorTarget();
+        var cursorTarget = extendedClient.getCursorTarget$BetterCombat();
         var range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
         var target = TargetFinder.findAttackTargetResult(
                 player,

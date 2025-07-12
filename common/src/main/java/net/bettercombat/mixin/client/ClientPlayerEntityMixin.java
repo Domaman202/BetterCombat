@@ -32,7 +32,7 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity {
             return;
         }
         var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
-        var swingProgress = client.getSwingProgress();
+        var swingProgress = client.getSwingProgress$BetterCombat();
         if (swingProgress < 0.98) {
             if (config.movement_speed_applied_smoothly) {
                 double p2 = 0;
