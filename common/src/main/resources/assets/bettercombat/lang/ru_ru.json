@@ -7,6 +7,7 @@
   "hud.bettercombat.mine_with_weapons_off": "Добывать оружием: Нет",
 
   "text.autoconfig.bettercombat.title": "Better Combat",
+  "text.autoconfig.bettercombat.option.client.hitInfoInChat": "Вывод количества ударов в чат",
   "text.autoconfig.bettercombat.option.client.hitInfoInChat.@Tooltip": "Вывод количества ударов в чат",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled": "Удерживайте для атаки",
   "text.autoconfig.bettercombat.option.client.isHoldToAttackEnabled.@Tooltip": "Автоматическая атака во время удерживания кнопки атаки (ЛКМ).",
