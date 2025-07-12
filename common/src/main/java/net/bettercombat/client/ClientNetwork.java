@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ClientNetwork {
@@ -49,17 +50,17 @@ public class ClientNetwork {
                 var soundEvent = Registries.SOUND_EVENT.get(Identifier.of(packet.soundId()));
                 var configVolume = BetterCombatClientMod.config.weaponSwingSoundVolume;
                 var volume = packet.volume() * ((float) Math.min(Math.max(configVolume, 0), 100) / 100F);
-                client.world.playSound(
-                        null,
+                client.world.playSoundClient(
                         packet.x(),
                         packet.y(),
                         packet.z(),
                         soundEvent,
                         SoundCategory.PLAYERS,
                         volume,
-                        packet.pitch());
+                        packet.pitch(),
+                        true);
             } catch (Exception e) {
-                e.printStackTrace();
+                BetterCombatMod.LOGGER.trace("Play sound error", e);
             }
         });
     }
