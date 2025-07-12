@@ -21,43 +21,50 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin implements PlayerAttackProperties, EntityPlayer_BetterCombat {
-    private int comboCount = 0;
-
-    public int getComboCount() {
-        return comboCount;
-    }
-
-    public void setComboCount(int comboCount) {
-        this.comboCount = comboCount;
-    }
-
-    private int hitsCount = 0;
-    private long lastHitTime = 0;
+    @Unique
+    private int comboCount$BetterCombat = 0;
+    @Unique
+    private int hitsCount$BetterCombat = 0;
+    @Unique
+    private long lastHitTime$BetterCombat = 0;
 
     @Override
-    public int getHitsCount() {
-        return hitsCount;
+    public int getComboCount$BetterCombat() {
+        return this.comboCount$BetterCombat;
     }
 
     @Override
-    public void updateHitsCount(int hitsCount, long lastHitTime) {
-        if (lastHitTime - this.lastHitTime > BetterCombatMod.config.hits_reset_time)
-            this.hitsCount = hitsCount;
-        else this.hitsCount += hitsCount;
-        this.lastHitTime = lastHitTime;
+    public void setComboCount$BetterCombat(int comboCount) {
+        this.comboCount$BetterCombat = comboCount;
     }
 
     @Override
-    public void resetHitsCount() {
-        this.hitsCount = 0;
+    public int getHitsCount$BetterCombat() {
+        return this.hitsCount$BetterCombat;
     }
 
+    @Override
+    public void updateHitsCount$BetterCombat(int hitsCount, long lastHitTime) {
+        if (lastHitTime - this.lastHitTime$BetterCombat > BetterCombatMod.config.hits_reset_time)
+            this.hitsCount$BetterCombat = hitsCount;
+        else this.hitsCount$BetterCombat += hitsCount;
+        this.lastHitTime$BetterCombat = lastHitTime;
+    }
+
+    @Override
+    public void resetHitsCount$BetterCombat() {
+        this.hitsCount$BetterCombat = 0;
+    }
+
+    @Unique
     private static final TrackedData<String> BETTER_COMBAT_MAIN_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
+    @Unique
     private static final TrackedData<String> BETTER_COMBAT_OFF_IDLE_ANIMATION = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.STRING);
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
@@ -72,20 +79,22 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         var player = ((PlayerEntity)instance);
 
         if (player.getWorld().isClient()) {
-            ((PlayerAttackAnimatable) this).updateAnimationsOnTick();
+            ((PlayerAttackAnimatable) this).updateAnimationsOnTick$BetterCombat();
         } else {
             var pose = PlayerAttackHelper.poseForPlayer(player);
             player.getDataTracker().set(BETTER_COMBAT_MAIN_IDLE_ANIMATION, pose.base());
             player.getDataTracker().set(BETTER_COMBAT_OFF_IDLE_ANIMATION, pose.offHand());
         }
-        updateDualWieldingSpeedBoost();
+        this.updateDualWieldingSpeedBoost$BetterCombat();
     }
 
-    public String getMainHandIdleAnimation() {
+    @Override
+    public String getMainHandIdleAnimation$BetterCombat() {
         return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_MAIN_IDLE_ANIMATION);
     }
 
-    public String getOffHandIdleAnimation() {
+    @Override
+    public String getOffHandIdleAnimation$BetterCombat() {
         return ((PlayerEntity) ((Object)this)).getDataTracker().get(BETTER_COMBAT_OFF_IDLE_ANIMATION);
     }
 
@@ -98,7 +107,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         }
 
         var player = ((PlayerEntity) ((Object)this));
-        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        var currentHand = PlayerAttackHelper.getCurrentAttack(player, this.comboCount$BetterCombat);
         if (currentHand != null) {
             // Disable sweeping
             return false;
@@ -108,34 +117,37 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     // FEATURE: Dual wielding
 
-    private Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> dualWieldingAttributeMap;
-    private static final Identifier dualWieldingSpeedModifierId = Identifier.of(BetterCombatMod.ID, "dual_wield");
+    @Unique
+    private Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier> dualWieldingAttributeMap$BetterCombat;
+    @Unique
+    private static final Identifier dualWieldingSpeedModifierId$BetterCombat = Identifier.of(BetterCombatMod.ID, "dual_wield");
 
 
     // FIXME: Replace with high level multiplied Mixin, WrapOperation player.getAttributes(...)
-    private void updateDualWieldingSpeedBoost() {
+    @Unique
+    private void updateDualWieldingSpeedBoost$BetterCombat() {
         var player = ((PlayerEntity) ((Object)this));
         var newState = PlayerAttackHelper.isDualWielding(player);
-        var currentState = dualWieldingAttributeMap != null;
+        var currentState = this.dualWieldingAttributeMap$BetterCombat != null;
         if (newState != currentState) {
             if(newState) {
                 // Just started dual wielding
                 // Adding speed boost modifier
-                this.dualWieldingAttributeMap = HashMultimap.create();
+                this.dualWieldingAttributeMap$BetterCombat = HashMultimap.create();
                 double multiplier = BetterCombatMod.config.dual_wielding_attack_speed_multiplier - 1;
-                dualWieldingAttributeMap.put(
+                this.dualWieldingAttributeMap$BetterCombat.put(
                         EntityAttributes.ATTACK_SPEED,
                         new EntityAttributeModifier(
-                                dualWieldingSpeedModifierId,
+                                dualWieldingSpeedModifierId$BetterCombat,
                                 multiplier,
                                 EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-                player.getAttributes().addTemporaryModifiers(dualWieldingAttributeMap);
+                player.getAttributes().addTemporaryModifiers(this.dualWieldingAttributeMap$BetterCombat);
             } else {
                 // Just stopped dual wielding
                 // Removing speed boost modifier
-                if (dualWieldingAttributeMap != null) { // Safety first... Who knows...
-                    player.getAttributes().removeModifiers(dualWieldingAttributeMap);
-                    dualWieldingAttributeMap = null;
+                if (this.dualWieldingAttributeMap$BetterCombat != null) { // Safety first... Who knows...
+                    player.getAttributes().removeModifiers(this.dualWieldingAttributeMap$BetterCombat);
+                    this.dualWieldingAttributeMap$BetterCombat = null;
                 }
             }
         }
@@ -147,7 +159,7 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
             index = 0)
     public Hand getHand(Hand hand) {
         var player = ((PlayerEntity) ((Object)this) );
-        var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        var currentHand = PlayerAttackHelper.getCurrentAttack(player, this.comboCount$BetterCombat);
         if (currentHand != null) {
             return currentHand.isOffHand() ? Hand.OFF_HAND : Hand.MAIN_HAND;
         } else {
@@ -155,7 +167,8 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         }
     }
 
-    private AttackHand lastAttack;
+    @Unique
+    private AttackHand lastAttack$BetterCombat;
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;"))
@@ -164,20 +177,20 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         // Here we return the off-hand stack as fake main-hand, purpose:
         // - Getting enchants
         // - Getting itemstack to be damaged
-        if (comboCount < 0) {
+        if (this.comboCount$BetterCombat < 0) {
             // Vanilla behaviour
             return instance.getMainHandStack();
         }
-        var hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+        var hand = PlayerAttackHelper.getCurrentAttack(instance, this.comboCount$BetterCombat);
         if (hand == null) {
-            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, comboCount);
+            var isOffHand = PlayerAttackHelper.shouldAttackWithOffHand(instance, this.comboCount$BetterCombat);
             if (isOffHand) {
                 return ItemStack.EMPTY;
             } else {
                 return instance.getMainHandStack();
             }
         }
-        lastAttack = hand;
+        this.lastAttack$BetterCombat = hand;
         return hand.itemStack();
     }
 
@@ -187,14 +200,14 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
         // DUAL WIELDING LOGIC
         // In case item got destroyed due to durability loss
         // We empty the correct hand
-        if (comboCount < 0) {
+        if (this.comboCount$BetterCombat < 0) {
             // Vanilla behaviour
             instance.setStackInHand(handArg, itemStack);
         }
         // `handArg` argument is always `MAIN`, we can ignore it
-        AttackHand hand = lastAttack;
+        AttackHand hand = this.lastAttack$BetterCombat;
         if (hand == null) {
-            hand = PlayerAttackHelper.getCurrentAttack(instance, comboCount);
+            hand = PlayerAttackHelper.getCurrentAttack(instance, this.comboCount$BetterCombat);
         }
         if (hand == null) {
             instance.setStackInHand(handArg, itemStack);
@@ -206,12 +219,12 @@ public abstract class PlayerEntityMixin implements PlayerAttackProperties, Entit
 
     // SECTION: BetterCombatPlayer
 
+    @Unique
     @Nullable
-    public AttackHand getCurrentAttack() {
-        if (comboCount < 0) {
+    public AttackHand getCurrentAttack$BetterCombat() {
+        if (this.comboCount$BetterCombat < 0)
             return null;
-        }
         var player = ((PlayerEntity) ((Object)this));
-        return PlayerAttackHelper.getCurrentAttack(player, comboCount);
+        return PlayerAttackHelper.getCurrentAttack(player, this.comboCount$BetterCombat);
     }
 }

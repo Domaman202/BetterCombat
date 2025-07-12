@@ -22,7 +22,7 @@ public class EnchantmentMixin {
     @Inject(method = "getEquipment", at = @At("RETURN"), cancellable = true)
     private void getEquipmentFix(LivingEntity entity, CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir) {
         if(entity instanceof PlayerEntity player) {
-            var comboCount = ((PlayerAttackProperties) player).getComboCount();
+            var comboCount = ((PlayerAttackProperties) player).getComboCount$BetterCombat();
             var currentHand = PlayerAttackHelper.getCurrentAttack(player, comboCount);
             // If striking with off-hand
             if (currentHand != null && currentHand.isOffHand()) {

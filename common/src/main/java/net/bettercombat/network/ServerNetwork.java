@@ -83,7 +83,7 @@ public class ServerNetwork {
         final var attributes = hand.attributes();
         final boolean useVanillaPacket = Packets.C2S_AttackRequest.UseVanillaPacket;
         world.getServer().executeSync(() -> {
-            ((PlayerAttackProperties)player).setComboCount(request.comboCount());
+            ((PlayerAttackProperties)player).setComboCount$BetterCombat(request.comboCount());
 
             PlayerAttackHelper.swapHandAttributes(player, hand.isOffHand(), () -> {
 
@@ -210,7 +210,7 @@ public class ServerNetwork {
                     player.getAttributes().removeModifiers(damageModifier);
                 }
 
-                ((PlayerAttackProperties) player).setComboCount(-1);
+                ((PlayerAttackProperties) player).setComboCount$BetterCombat(-1);
             });
         });
     }

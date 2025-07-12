@@ -62,7 +62,7 @@ public class LivingEntityMixin implements ConfigurableKnockback {
         var object = (Object)this;
         if (object instanceof PlayerEntity) {
             var player = (PlayerEntity)object;
-            var comboCount = ((PlayerAttackProperties)player).getComboCount();
+            var comboCount = ((PlayerAttackProperties)player).getComboCount$BetterCombat();
             if (player.getWorld().isClient &&
                     comboCount > 0
                     && PlayerAttackHelper.shouldAttackWithOffHand(player, comboCount)) {

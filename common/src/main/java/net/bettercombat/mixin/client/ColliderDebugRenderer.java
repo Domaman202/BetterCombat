@@ -16,6 +16,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -74,10 +75,11 @@ public class ColliderDebugRenderer {
                         .scale(0.95)
                         .updateVertex())
                 .collect(Collectors.toList());
-        drawOutline(matrices, obb, collidingObbs, collides);
+        this.drawOutline$BetterCombat(matrices, obb, collidingObbs, collides);
     }
 
-    private void drawOutline(MatrixStack matrixStack, OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) throws LoadException {
+    @Unique
+    private void drawOutline$BetterCombat(MatrixStack matrixStack, OrientedBoundingBox obb, List<OrientedBoundingBox> otherObbs, boolean collides) throws LoadException {
 //        RenderSystem.enableDepthTest();
 //        RenderSystem.setShader(MinecraftClient.getInstance().getShaderLoader().getProgramToLoad(ShaderProgramKeys.POSITION_COLOR));
 //        Tessellator tessellator = Tessellator.getInstance();
@@ -110,7 +112,8 @@ public class ColliderDebugRenderer {
 //        RenderSystem.enableBlend(); // todo:
     }
 
-    private void outlineOBB(MatrixStack matrixStack, OrientedBoundingBox box, BufferBuilder buffer,
+    @Unique
+    private void outlineOBB$BetterCombat(MatrixStack matrixStack, OrientedBoundingBox box, BufferBuilder buffer,
                             float red1, float green1, float blue1,
                             float red2, float green2, float blue2,
                             float alpha) {
@@ -138,7 +141,8 @@ public class ColliderDebugRenderer {
         buffer.vertex(matrix4f, (float) box.center.x, (float) box.center.y, (float) box.center.z).color(0, 0, 0, 0);
     }
 
-    private void look(MatrixStack matrixStack, OrientedBoundingBox box, BufferBuilder buffer, float alpha) {
+    @Unique
+    private void look$BetterCombat(MatrixStack matrixStack, OrientedBoundingBox box, BufferBuilder buffer, float alpha) {
         Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
         buffer.vertex(matrix4f, (float) box.center.x, (float) box.center.y, (float) box.center.z).color(0, 0, 0, alpha);
 
@@ -157,29 +161,32 @@ public class ColliderDebugRenderer {
         buffer.vertex(matrix4f, (float) box.center.x, (float) box.center.y, (float) box.center.z).color(0, 0, 0, alpha);
     }
 
-    public void printDebug(OrientedBoundingBox obb) {
+    @Unique
+    public void printDebug$BetterCombat(OrientedBoundingBox obb) {
         Vec3d extent_x = obb.axisX.multiply(obb.extent.x);
         Vec3d extent_y = obb.axisY.multiply(obb.extent.y);
         Vec3d extent_z = obb.axisZ.multiply(obb.extent.z);
-        System.out.println("Center: " + vec3Short(obb.center) + " Extent: " + vec3Short(obb.extent) );
-        System.out.println("scaledAxisX: " + vec3Short(obb.scaledAxisX)
-                + "scaledAxisY: " + vec3Short(obb.scaledAxisY)
-                + "scaledAxisZ: " + vec3Short(obb.scaledAxisZ));
-        System.out.println("1:" + vec3Short(obb.vertex1)
-                + " 2:" + vec3Short(obb.vertex2)
-                + " 3:" + vec3Short(obb.vertex3)
-                + " 4:" + vec3Short(obb.vertex4));
-        System.out.println("5:" + vec3Short(obb.vertex5)
-                + " 6:" + vec3Short(obb.vertex6)
-                + " 7:" + vec3Short(obb.vertex7)
-                + " 8:" + vec3Short(obb.vertex8));
+        System.out.println("Center: " + this.vec3Short$BetterCombat(obb.center) + " Extent: " + this.vec3Short$BetterCombat(obb.extent) );
+        System.out.println("scaledAxisX: " + this.vec3Short$BetterCombat(obb.scaledAxisX)
+                + "scaledAxisY: " + this.vec3Short$BetterCombat(obb.scaledAxisY)
+                + "scaledAxisZ: " + this.vec3Short$BetterCombat(obb.scaledAxisZ));
+        System.out.println("1:" + this.vec3Short$BetterCombat(obb.vertex1)
+                + " 2:" + this.vec3Short$BetterCombat(obb.vertex2)
+                + " 3:" + this.vec3Short$BetterCombat(obb.vertex3)
+                + " 4:" + this.vec3Short$BetterCombat(obb.vertex4));
+        System.out.println("5:" + this.vec3Short$BetterCombat(obb.vertex5)
+                + " 6:" + this.vec3Short$BetterCombat(obb.vertex6)
+                + " 7:" + this.vec3Short$BetterCombat(obb.vertex7)
+                + " 8:" + this.vec3Short$BetterCombat(obb.vertex8));
     }
 
-    private String vec3Short(Vec3d vec) {
+    @Unique
+    private String vec3Short$BetterCombat(Vec3d vec) {
         return "{" + String.format("%.3f", vec.x) + ", "  + String.format("%.3f", vec.y) + ", "  + String.format("%.3f", vec.z) + "}";
     }
 
-    private Vec3d[] getVertices(Box box) {
+    @Unique
+    private Vec3d[] getVertices$BetterCombat(Box box) {
         return new Vec3d[]{
             new Vec3d(box.minX, (float) box.minY, (float) box.minZ),
             new Vec3d(box.maxX, (float) box.minY, (float) box.minZ),

@@ -31,9 +31,9 @@ public class ClientNetwork {
                     // Avoid local playback, unless replay mod is loaded
                     && (player != client.player || Platform.isModLoaded("replaymod")) ) {
                 if (packet.animationName().equals(Packets.AttackAnimation.StopSymbol)) {
-                    ((PlayerAttackAnimatable) entity).stopAttackAnimation(packet.length());
+                    ((PlayerAttackAnimatable) entity).stopAttackAnimation$BetterCombat(packet.length());
                 } else {
-                    ((PlayerAttackAnimatable) entity).playAttackAnimation(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
+                    ((PlayerAttackAnimatable) entity).playAttackAnimation$BetterCombat(packet.animationName(), packet.animatedHand(), packet.length(), packet.upswing());
                 }
             }
         });

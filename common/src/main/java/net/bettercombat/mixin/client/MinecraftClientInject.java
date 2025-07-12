@@ -227,7 +227,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         String animationName = hand.attack().animation();
         boolean isOffHand = hand.isOffHand();
         var animatedHand = AnimatedHand.from(isOffHand, attributes.isTwoHanded());
-        ((PlayerAttackAnimatable) player).playAttackAnimation(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
+        ((PlayerAttackAnimatable) player).playAttackAnimation$BetterCombat(animationName, animatedHand, attackCooldownTicksFloat, upswingRate);
         var packet = new Packets.AttackAnimation(player.getId(), animatedHand, animationName, attackCooldownTicksFloat, upswingRate);
         Platform.networkC2S_Send(packet);
         BetterCombatClientEvents.ATTACK_START.invoke(handler -> {
@@ -365,12 +365,12 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         var attackedCount = (int) targets.stream().filter(it -> it.isAttackable() && it instanceof LivingEntity living && living.getHealth() > 0).count();
         if (attackedCount == 0) {
             if (BetterCombatMod.config.reset_hits_after_miss) {
-                ((PlayerAttackProperties) player).resetHitsCount();
+                ((PlayerAttackProperties) player).resetHitsCount$BetterCombat();
             }
         } else {
-            ((PlayerAttackProperties) player).updateHitsCount(attackedCount, System.currentTimeMillis());
+            ((PlayerAttackProperties) player).updateHitsCount$BetterCombat(attackedCount, System.currentTimeMillis());
             if (BetterCombatClientMod.config.hitInfoInChat) {
-                player.sendMessage(Text.of("§6Нанесено ударов: §4§o" + ((PlayerAttackProperties) player).getHitsCount()), false);
+                player.sendMessage(Text.of("§6Нанесено ударов: §4§o" + ((PlayerAttackProperties) player).getHitsCount$BetterCombat()), false);
             }
         }
 
@@ -397,7 +397,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     }
 
     private void setComboCount(int comboCount) {
-        ((PlayerAttackProperties)player).setComboCount(comboCount);
+        ((PlayerAttackProperties)player).setComboCount$BetterCombat(comboCount);
     }
 
     private static boolean areItemStackEqual(ItemStack left, ItemStack right) {
@@ -417,7 +417,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     private void cancelWeaponSwing() {
         var downWind = (int)Math.round(PlayerAttackHelper.getAttackCooldownTicksCapped(player) * (1 - 0.5 * BetterCombatMod.config.upswing_multiplier));
-        ((PlayerAttackAnimatable) player).stopAttackAnimation(downWind);
+        ((PlayerAttackAnimatable) player).stopAttackAnimation$BetterCombat(downWind);
         var packet = Packets.AttackAnimation.stop(player.getId(), downWind);
         Platform.networkC2S_Send(packet);
         upswingStack = null;
@@ -431,7 +431,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @Override
     public int getComboCount() {
-        return ((PlayerAttackProperties)player).getComboCount();
+        return ((PlayerAttackProperties)player).getComboCount$BetterCombat();
     }
 
     @Override

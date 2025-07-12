@@ -4,9 +4,9 @@ import net.bettercombat.api.WeaponAttributes;
 import org.jetbrains.annotations.Nullable;
 
 public interface ItemStackNBTWeaponAttributes {
-    boolean hasInvalidAttributes();
-    void setInvalidAttributes(boolean invalid);
+    boolean hasInvalidAttributes$BetterCombat();
+    void setInvalidAttributes$BetterCombat(boolean invalid);
     @Nullable
-    WeaponAttributes getWeaponAttributes();
-    void setWeaponAttributes(@Nullable WeaponAttributes weaponAttributes);
+    WeaponAttributes getWeaponAttributes$BetterCombat();
+    void setWeaponAttributes$BetterCombat(@Nullable WeaponAttributes weaponAttributes);
 }
