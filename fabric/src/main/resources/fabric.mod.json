@@ -2,17 +2,20 @@
   "schemaVersion": 1,
   "id": "bettercombat",
   "version": "${version}",
-  "name": "Better Combat",
+  "name": "Better Combat (CWS)",
   "description": "Easy, spectacular and fun melee combat system from Minecraft Dungeons.",
   "authors": [
-    "Daedelus"
+    "Daedelus",
+    "DomamaN202",
+    "ConceptWorx Studios"
   ],
   "contributors": [
     "KosmX", "Gecko"
   ],
   "contact": {
-    "issues": "https://github.com/ZsoltMolnarrr/BetterCombat/issues",
-    "homepage": "https://github.com/ZsoltMolnarrr/BetterCombat"
+    "homepage": "https://t.me/CWS_chat",
+    "sources": "https://github.com/Domaman202/BetterCombat-CWS",
+    "issues": "https://github.com/Domaman202/BetterCombat-CWS/issues"
   },
   "license": "All Rights Reserved",
   "icon": "assets/bettercombat/icon.png",
