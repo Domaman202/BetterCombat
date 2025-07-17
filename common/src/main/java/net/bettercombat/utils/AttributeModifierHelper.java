@@ -2,6 +2,7 @@ package net.bettercombat.utils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.bettercombat.BetterCombatMod;
 import net.bettercombat.logic.WeaponRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
@@ -9,7 +10,9 @@ import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 public class AttributeModifierHelper {
@@ -31,5 +34,26 @@ public class AttributeModifierHelper {
     public static boolean checkNoTwoHanded() {
         var mainAttributes = WeaponRegistry.getAttributes(MinecraftClient.getInstance().player.getMainHandStack());
         return mainAttributes == null || !mainAttributes.isTwoHanded();
+    }
+
+    public static boolean checkOffhandPutAllow(ItemStack stack) {
+        var id = Registries.ITEM.getId(stack.getItem()).toString();
+        for (var blacklist : BetterCombatMod.config.blacklist_offhand_by_id) {
+            if (blacklist.equals(id)) {
+                return false;
+            }
+        }
+        var attributes = WeaponRegistry.getAttributes(stack);
+        if (attributes == null)
+            return true;
+        if (attributes.isTwoHanded())
+            return false;
+        var category = attributes.category();
+        for (var blacklist : BetterCombatMod.config.blacklist_offhand_by_category) {
+            if (blacklist.equals(category)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

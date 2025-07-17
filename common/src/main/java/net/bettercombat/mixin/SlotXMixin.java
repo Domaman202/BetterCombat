@@ -1,6 +1,7 @@
 package net.bettercombat.mixin;
 
 import net.bettercombat.logic.WeaponRegistry;
+import net.bettercombat.utils.AttributeModifierHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,11 @@ import org.spongepowered.asm.mixin.Mixin;
 public class SlotXMixin extends Slot {
     public SlotXMixin(Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
+    }
+
+    @Override
+    public boolean canInsert(ItemStack stack) {
+        return AttributeModifierHelper.checkOffhandPutAllow(stack);
     }
 
     @Override

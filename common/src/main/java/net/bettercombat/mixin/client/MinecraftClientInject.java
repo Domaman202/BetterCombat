@@ -492,7 +492,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
 
     @WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
     public void handleInputEvents(ClientPlayNetworkHandler instance, Packet<?> packet, Operation<Void> original) {
-        if (AttributeModifierHelper.checkNoTwoHanded()) {
+        if (AttributeModifierHelper.checkNoTwoHanded() && AttributeModifierHelper.checkOffhandPutAllow(MinecraftClient.getInstance().player.getInventory().getSelectedStack())) {
             original.call(instance, packet);
         }
     }

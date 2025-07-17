@@ -120,6 +120,15 @@ public class ServerConfig implements ConfigData {
     @Comment("Compress the weapon attributes registry for transmission")
     public boolean weapon_registry_compression = true;
 
+    @Comment("Blacklist for item (by Minecraft identifier) that can't be put in the second hand")
+    public String[] blacklist_offhand_by_id = new String[]{
+            "minecraft:trident",
+            "minecraft:bow",
+            "minecraft:crossbow"
+    };
+    @Comment("Blacklist for item (by BetterCombat category) that can't be put in the second hand")
+    public String[] blacklist_offhand_by_category = new String[0];
+
     public float getUpswingMultiplier() {
         return Math.max(0.2F, Math.min(1, upswing_multiplier));
     }
