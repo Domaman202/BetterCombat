@@ -14,6 +14,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -24,37 +25,6 @@ import static net.minecraft.entity.EquipmentSlot.OFFHAND;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin implements ConfigurableKnockback {
-//    @Shadow
-//    @Final
-//    protected EntityEquipment equipment;
-
-    // FEATURE: Two-handed wielding
-
-//    @Inject(method = "getEquippedStack", at = @At("HEAD"), cancellable = true)
-//    public void getEquippedStack_Pre(EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir) {
-//        var mainHandHasTwoHanded = false;
-//        var mainHandStack = this.equipment.get(MAINHAND);
-//        var mainHandAttributes = WeaponRegistry.getAttributes(mainHandStack);
-//        if (mainHandAttributes != null && mainHandAttributes.isTwoHanded()) {
-//            mainHandHasTwoHanded = true;
-//        }
-//
-//        var offHandHasTwoHanded = false;
-//        var offHandStack = this.equipment.get(OFFHAND);
-//        var offHandAttributes = WeaponRegistry.getAttributes(offHandStack);
-//        if(offHandAttributes != null && offHandAttributes.isTwoHanded()) {
-//            offHandHasTwoHanded = true;
-//        }
-//
-//        if (slot == OFFHAND) {
-//            if (mainHandHasTwoHanded || offHandHasTwoHanded) {
-//                cir.setReturnValue(ItemStack.EMPTY);
-//                cir.cancel();
-//                return;
-//            }
-//        }
-//    }
-
     // FEATURE: Dual wielded attacking - Client side weapon cooldown for offhand
 
     @Inject(method = "getAttributeValue",at = @At("HEAD"), cancellable = true)
@@ -76,15 +46,16 @@ public class LivingEntityMixin implements ConfigurableKnockback {
     }
 
     // MARK: ConfigurableKnockback
-    private float customKnockbackMultiplier_BetterCombat = 1;
+    @Unique
+    private float customKnockbackMultiplier$BetterCombat = 1;
 
     @Override
     public void setKnockbackMultiplier_BetterCombat(float value) {
-        customKnockbackMultiplier_BetterCombat = value;
+        this.customKnockbackMultiplier$BetterCombat = value;
     }
 
     @ModifyVariable(method = "takeKnockback", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     public double takeKnockback_HEAD_changeStrength(double knockbackStrength) {
-        return knockbackStrength * customKnockbackMultiplier_BetterCombat;
+        return knockbackStrength * this.customKnockbackMultiplier$BetterCombat;
     }
 }

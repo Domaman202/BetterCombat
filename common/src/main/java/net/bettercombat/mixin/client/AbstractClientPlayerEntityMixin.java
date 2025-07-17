@@ -180,7 +180,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
     private AdjustmentModifierV2 createAttackAdjustment$BetterCombat() {
         var player = (PlayerEntity)this;
         return new AdjustmentModifierV2((partName) -> {
-            // System.out.println("Player pitch: " + player.getPitch());
             float rotationX = 0;
             float rotationY = 0;
             float rotationZ = 0;
@@ -198,7 +197,6 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
                         offsetY += offset * 0.5;
                         offsetZ -= offset;
                     }
-                // else if (isArm(partName)) rotationX = pitch;
                 } else return Optional.empty();
             } else {
                 var pitch = player.getPitch();
@@ -270,12 +268,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
             var legAnimationThreshold = BetterCombatClientMod.config.legAnimationThreshold;
             if (BetterCombatClientMod.config.legAnimationThreshold > 0) {
                 var moving = this.isSprinting() || this.isWalking$BetterCombat();
-//                var horizontalSpeed = this.getVelocity().horizontalLength();
-//                System.out.println("Horizontal speed: " + horizontalSpeed);
-                if (moving
-                        // && horizontalSpeed > legAnimationThreshold
-                        && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)
-                ) {
+                if (moving && this.getVelocity().horizontalLengthSquared() > (legAnimationThreshold * legAnimationThreshold)) {
                     StateCollectionHelper.configure(animation.rightLeg, false, false);
                     StateCollectionHelper.configure(animation.leftLeg, false, false);
                 }
@@ -307,8 +300,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
         if (currentAnimation != null && currentAnimation instanceof KeyframeAnimationPlayer) {
             var fadeOut = Math.round(length);
             this.attackAnimation$BetterCombat.adjustmentModifier.fadeOut(fadeOut);
-            this.attackAnimation$BetterCombat.base.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
+            this.attackAnimation$BetterCombat.base.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(fadeOut, Ease.INOUTSINE), null);
         }
     }
 
@@ -316,14 +308,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity imple
 
     @Unique
     private FirstPersonConfiguration firstPersonConfig$BetterCombat(AnimatedHand animatedHand) {
-        // boolean leftHanded = getMainArm() == Arm.LEFT;
         var showRightItem = true;
         var showLeftItem = BetterCombatClientMod.config.isShowingOtherHandFirstPerson || animatedHand == AnimatedHand.TWO_HANDED;
         var showRightArm = showRightItem && BetterCombatClientMod.config.isShowingArmsInFirstPerson;
         var showLeftArm = showLeftItem && BetterCombatClientMod.config.isShowingArmsInFirstPerson;
-
-        var config = new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem);
-        // System.out.println("Animation config: " + config);
-        return config;
+        return new FirstPersonConfiguration(showRightArm, showLeftArm, showRightItem, showLeftItem);
     }
 }

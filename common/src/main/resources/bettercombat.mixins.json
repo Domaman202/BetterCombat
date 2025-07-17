@@ -12,7 +12,6 @@
     "SlotXMixin",
     "player.LivingEntityAccessor",
     "player.LivingEntityMixin",
-    "player.PlayerEntityAccessor",
     "player.PlayerEntityMixin",
     "player.PlayerEntityRangeMixin"
   ],
@@ -24,7 +23,6 @@
     "client.ColliderDebugRenderer",
     "client.HandledScreenMixin",
     "client.InGameHudInject",
-    "client.ItemStackTooltipMixin",
     "client.MinecraftClientAccessor",
     "client.MinecraftClientInject"
   ],

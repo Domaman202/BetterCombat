@@ -23,14 +23,11 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity {
     private void tickMovement_ModifyInput(CallbackInfo ci) {
         var config = BetterCombatMod.config;
         var multiplier = Math.min(Math.max(config.movement_speed_while_attacking, 0.0), 1.0);
-//        System.out.println("Multiplier " + multiplier);
-        if (multiplier == 1) {
+        if (multiplier == 1)
             return;
-        }
         var clientPlayer = (ClientPlayerEntity)((Object)this);
-        if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting) {
+        if (clientPlayer.hasVehicle() && !config.movement_speed_effected_while_mounting)
             return;
-        }
         var client = (MinecraftClient_BetterCombat) MinecraftClient.getInstance();
         var swingProgress = client.getSwingProgress$BetterCombat();
         if (swingProgress < 0.98) {
@@ -42,8 +39,6 @@ public abstract class ClientPlayerEntityMixin extends LivingEntity {
                     p2 = MathHelper.easeOutCubic(1 - ((swingProgress - 0.5) * 2));
                 }
                 multiplier = (float) ( 1.0 - (1.0 - multiplier) * p2 );
-//                var chart = "-".repeat((int)(100.0 * multiplier)) + "x";
-//                System.out.println("Movement speed multiplier: " + String.format("%.4f", multiplier) + ">" + chart);
             }
             clientPlayer.forwardSpeed *= (float) multiplier;
             clientPlayer.sidewaysSpeed *= (float) multiplier;

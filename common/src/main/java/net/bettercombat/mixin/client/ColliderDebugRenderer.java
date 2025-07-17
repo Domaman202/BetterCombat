@@ -29,33 +29,26 @@ public class ColliderDebugRenderer {
     @Inject(method = "render",at = @At("TAIL"))
     public void renderColliderDebug(MatrixStack matrices, Frustum frustum, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) throws LoadException {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes()) {
+        if (!((MinecraftClientAccessor) client).getEntityRenderDispatcher().shouldRenderHitboxes())
             return;
-        }
         ClientPlayerEntity player = client.player;
-        if (player == null) {
+        if (player == null)
             return;
-        }
-        if (!BetterCombatClientMod.config.isDebugOBBEnabled) {
+        if (!BetterCombatClientMod.config.isDebugOBBEnabled)
             return;
-        }
         Camera camera = client.gameRenderer.getCamera();
-        if (!camera.isReady()) {
+        if (!camera.isReady())
             return;
-        }
-        if (client.player.getMainHandStack() == null) {
+        if (client.player.getMainHandStack() == null)
             return;
-        }
         var extendedClient = (MinecraftClient_BetterCombat)client;
         var comboCount = extendedClient.getComboCount$BetterCombat();
         var hand = PlayerAttackHelper.getCurrentAttack(client.player, comboCount);
-        if (hand == null) {
+        if (hand == null)
             return;
-        }
         WeaponAttributes attributes = hand.attributes();
-        if (attributes == null) {
+        if (attributes == null)
             return;
-        }
         var cursorTarget = extendedClient.getCursorTarget$BetterCombat();
         var range = PlayerAttackHelper.getRangeForItem(player, hand.itemStack());
         var target = TargetFinder.findAttackTargetResult(
@@ -63,7 +56,7 @@ public class ColliderDebugRenderer {
                 cursorTarget,
                 hand.attack(),
                 range);
-        boolean collides = target.entities.size() > 0;
+        boolean collides = !target.entities.isEmpty();
         Vec3d cameraOffset = camera.getPos().negate();
         var obb = target.obb.
                 copy()
@@ -74,7 +67,7 @@ public class ColliderDebugRenderer {
                         .offset(cameraOffset)
                         .scale(0.95)
                         .updateVertex())
-                .collect(Collectors.toList());
+                .toList();
         this.drawOutline$BetterCombat(matrices, obb, collidingObbs, collides);
     }
 
@@ -163,9 +156,6 @@ public class ColliderDebugRenderer {
 
     @Unique
     public void printDebug$BetterCombat(OrientedBoundingBox obb) {
-        Vec3d extent_x = obb.axisX.multiply(obb.extent.x);
-        Vec3d extent_y = obb.axisY.multiply(obb.extent.y);
-        Vec3d extent_z = obb.axisZ.multiply(obb.extent.z);
         System.out.println("Center: " + this.vec3Short$BetterCombat(obb.center) + " Extent: " + this.vec3Short$BetterCombat(obb.extent) );
         System.out.println("scaledAxisX: " + this.vec3Short$BetterCombat(obb.scaledAxisX)
                 + "scaledAxisY: " + this.vec3Short$BetterCombat(obb.scaledAxisY)
