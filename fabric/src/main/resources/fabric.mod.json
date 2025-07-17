@@ -32,8 +32,7 @@
     ]
   },
   "mixins": [
-    "bettercombat.mixins.json",
-    "bettercombat-fabric.mixins.json"
+    "bettercombat.mixins.json"
   ],
   "depends": {
     "minecraft": ">=1.20.0",

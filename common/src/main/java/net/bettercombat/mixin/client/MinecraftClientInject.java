@@ -1,5 +1,7 @@
 package net.bettercombat.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.bettercombat.BetterCombatMod;
 import net.bettercombat.Platform;
@@ -15,18 +17,21 @@ import net.bettercombat.client.collision.TargetFinder;
 import net.bettercombat.config.ClientConfigWrapper;
 import net.bettercombat.logic.*;
 import net.bettercombat.network.Packets;
+import net.bettercombat.utils.AttributeModifierHelper;
 import net.bettercombat.utils.PatternMatching;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
@@ -84,7 +89,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         MinecraftClient client = this.thisClient$BetterCombat();
         WeaponAttributes attributes = WeaponRegistry.getAttributes(client.player.getMainHandStack());
         if (attributes != null && attributes.attacks() != null) {
-            if (isTargetingMineableBlock() || this.isHarvesting$BetterCombat) {
+            if (this.isTargetingMineableBlock$BetterCombat() || this.isHarvesting$BetterCombat) {
                 this.isHarvesting$BetterCombat = true;
                 return;
             }
@@ -104,7 +109,7 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         if (attributes != null && attributes.attacks() != null) {
             boolean isPressed = client.options.attackKey.isPressed();
             if(isPressed && !this.isHoldingAttackInput$BetterCombat) {
-                if (isTargetingMineableBlock() || this.isHarvesting$BetterCombat) {
+                if (this.isTargetingMineableBlock$BetterCombat() || this.isHarvesting$BetterCombat) {
                     this.isHarvesting$BetterCombat = true;
                     return;
                 } else {
@@ -135,7 +140,8 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
         }
     }
 
-    private boolean isTargetingMineableBlock() {
+    @Unique
+    private boolean isTargetingMineableBlock$BetterCombat() {
         if (!BetterCombatClientMod.config.isMiningWithWeaponsEnabled) {
             return false;
         }
@@ -479,6 +485,15 @@ public abstract class MinecraftClientInject implements MinecraftClient_BetterCom
     public void cancelUpswing$BetterCombat() {
         if (this.upswingTicks$BetterCombat > 0) {
             this.cancelWeaponSwing$BetterCombat();
+        }
+    }
+
+    //
+
+    @WrapOperation(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
+    public void handleInputEvents(ClientPlayNetworkHandler instance, Packet<?> packet, Operation<Void> original) {
+        if (AttributeModifierHelper.checkNoTwoHanded()) {
+            original.call(instance, packet);
         }
     }
 }
